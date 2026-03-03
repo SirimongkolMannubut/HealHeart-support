@@ -59,6 +59,19 @@ export default function CreatePostPage() {
     e.preventDefault();
     if (!title || !content) return;
     
+    // AI Moderation
+    const moderationRes = await fetch('/api/moderate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: `${title} ${content}` }),
+    });
+    const moderation = await moderationRes.json();
+    
+    if (moderation.flagged) {
+      alert('เนื้อหาของคุณไม่เหมาะสม กรุณาแก้ไขก่อนโพสต์');
+      return;
+    }
+    
     await createPost(title, content, category);
     router.push('/');
   };
