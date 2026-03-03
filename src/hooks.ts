@@ -54,6 +54,8 @@ export function usePosts() {
     }
 
     const fetchPosts = async () => {
+      if (!supabase) return;
+      
       const { data, error } = await supabase
         .from('posts')
         .select('*')
@@ -90,7 +92,7 @@ export function usePosts() {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { if (supabase) supabase.removeChannel(channel); };
   }, []);
 
   const createPost = async (title: string, content: string, category: string) => {
@@ -145,6 +147,8 @@ export function useComments(postId: string) {
     if (!postId || !supabase) return;
 
     const fetchComments = async () => {
+      if (!supabase) return;
+      
       const { data } = await supabase
         .from('comments')
         .select('*')
@@ -171,7 +175,7 @@ export function useComments(postId: string) {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { if (supabase) supabase.removeChannel(channel); };
   }, [postId]);
 
   const addComment = async (content: string) => {
