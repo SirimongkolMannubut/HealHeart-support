@@ -1,7 +1,7 @@
 export const BAD_WORDS = [
   "ควย", "เย็ด", "เหี้ย", "สัส", "มึง", "กู", "ดอกทอง", "ระยำ", "จัญไร",
-  "เงี่ยน", "หี", "อมหำ", "เสียบ", "น้ำแตก", "เลีย", "ดูด", "ขย่ม", "ซอย",
-  "fuck", "shit", "bitch", "asshole", "dick", "pussy", "cock", "sex"
+  "เงี่ยน", "หี", "อมหำ", "เสียบ", "น้ำแตก", "เลีย", "ดูด", "ขย่ม", "ซอย", "คัน", "ตอก", "ฟิน",
+  "fuck", "shit", "bitch", "asshole", "dick", "pussy", "cock", "sex", "horny"
 ];
 
 export const SELF_HARM_KEYWORDS = [
