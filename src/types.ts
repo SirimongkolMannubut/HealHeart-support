@@ -42,6 +42,7 @@ export interface Post {
   authorId?: string;
   createdAt?: Date | { toDate?: () => Date } | string | number;
   likes?: number;
+  commentCount?: number;
   reportCount?: number;
   isResolved?: boolean;
 }
