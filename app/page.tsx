@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Heart, PlusCircle, Shield, Search, TrendingUp, Clock, MessageCircle, AlertTriangle } from 'lucide-react';
+import { Heart, PlusCircle, Shield, Search, TrendingUp, Clock, MessageCircle, AlertTriangle, Bookmark } from 'lucide-react';
 import { usePosts } from '@/hooks';
 import { CATEGORIES } from '@/lib/utils';
-import { getAnonymousId, hasLikedPost } from '@/types';
+import { getAnonymousId, hasLikedPost, isBookmarked, toggleBookmark } from '@/types';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import Link from 'next/link';
@@ -47,6 +47,9 @@ const Navbar = React.memo(() => {
           </div>
         </Link>
         <div className="flex items-center gap-4">
+          <Link href="/bookmarks" className="text-amber-500 hover:text-amber-600">
+            <Bookmark size={20} />
+          </Link>
           <Link href="/admin" className="text-slate-400 hover:text-slate-600">
             <Shield size={20} />
           </Link>
@@ -61,9 +64,11 @@ const Navbar = React.memo(() => {
 
 const PostCard = React.memo(({ post, onLike, onReport }: { post: any; onLike: (id: string) => void; onReport: (id: string) => void }) => {
   const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
   
   useEffect(() => {
     setLiked(hasLikedPost(post.id));
+    setBookmarked(isBookmarked(post.id));
   }, [post.id]);
 
   return (
@@ -109,14 +114,16 @@ const PostCard = React.memo(({ post, onLike, onReport }: { post: any; onLike: (i
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (confirm('รายงานโพสต์นี้หรือไม่?')) {
-              onReport(post.id);
-            }
+            const newState = toggleBookmark(post.id);
+            setBookmarked(newState);
           }}
-          className="p-2 text-slate-300 hover:text-amber-500 transition-colors"
-          title="รายงานโพสต์"
+          className={cn(
+            "p-2 transition-colors",
+            bookmarked ? "text-amber-500" : "text-slate-300 hover:text-amber-500"
+          )}
+          title="บันทึก"
         >
-          <AlertTriangle size={16} />
+          <Bookmark size={16} fill={bookmarked ? "currentColor" : "none"} />
         </button>
       </div>
     </div>
