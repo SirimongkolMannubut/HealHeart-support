@@ -4,10 +4,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Heart, PlusCircle, Shield, Search, TrendingUp, Clock, MessageCircle, AlertTriangle, Bookmark } from 'lucide-react';
 import { usePosts } from '@/hooks';
 import { CATEGORIES } from '@/lib/utils';
-import { getAnonymousId, hasLikedPost, isBookmarked, toggleBookmark } from '@/types';
+import { getAnonymousId, hasLikedPost, isBookmarked, toggleBookmark, getUserRole } from '@/types';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 function cn(...inputs: any[]) {
   return twMerge(clsx(inputs));
@@ -137,6 +138,17 @@ export default function HomePage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkRole = async () => {
+      const role = await getUserRole();
+      if (!role) {
+        router.push('/onboarding');
+      }
+    };
+    checkRole();
+  }, [router]);
 
   const filteredAndSortedPosts = useMemo(() => {
     let result = posts;

@@ -1,8 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
+import { supabase } from './lib/firebase';
 
 const ANON_ID_KEY = 'healheart_anon_id';
 const LIKED_POSTS_KEY = 'healheart_liked_posts';
 const BOOKMARKED_POSTS_KEY = 'healheart_bookmarked_posts';
+const USER_ROLE_KEY = 'healheart_user_role';
+
+export const USER_ROLES = [
+  '👨‍🎓 นักเรียน/นักศึกษา',
+  '💼 คนทำงาน',
+  '👨‍👩‍👧 พ่อแม่/ผู้ปกครอง',
+  '🏠 แม่บ้าน',
+  '🎨 ฟรีแลนซ์',
+  '💔 โสด',
+  '💑 มีแฟน/แต่งงาน',
+  '🤷 อื่นๆ',
+];
 
 export function getAnonymousId(): string {
   if (typeof localStorage === 'undefined') return 'User-unknown';
@@ -54,6 +67,43 @@ export function toggleBookmark(postId: string): boolean {
 
 export function isBookmarked(postId: string): boolean {
   return getBookmarkedPosts().includes(postId);
+}
+
+export async function getUserRole(): Promise<string | null> {
+  if (typeof localStorage === 'undefined') return null;
+  
+  let role = localStorage.getItem(USER_ROLE_KEY);
+  if (role) return role;
+  
+  if (!supabase) return null;
+  
+  const userId = getAnonymousId();
+  const { data } = await supabase
+    .from('users')
+    .select('role')
+    .eq('user_id', userId)
+    .single();
+  
+  if (data?.role) {
+    localStorage.setItem(USER_ROLE_KEY, data.role);
+    return data.role;
+  }
+  
+  return null;
+}
+
+export async function setUserRole(role: string): Promise<void> {
+  if (typeof localStorage === 'undefined') return;
+  
+  localStorage.setItem(USER_ROLE_KEY, role);
+  
+  if (!supabase) return;
+  
+  const userId = getAnonymousId();
+  await supabase.from('users').upsert({
+    user_id: userId,
+    role: role,
+  });
 }
 
 // createdAt can be a Date, Firestore Timestamp-like object (with toDate()),
