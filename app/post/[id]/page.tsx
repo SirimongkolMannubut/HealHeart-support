@@ -89,9 +89,14 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
         <div className="glass-card p-8 rounded-[2.5rem] mb-8">
           <div className="flex justify-between items-start mb-4">
-            <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">
-              {post.category}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">
+                {post.category}
+              </span>
+              {post.authorRole && post.authorRole !== '' && (
+                <span className="text-xs text-slate-500">{post.authorRole}</span>
+              )}
+            </div>
             <span className="text-slate-400 text-xs">{timeAgo(post.createdAt)}</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-800 mb-4">{post.title}</h2>
@@ -111,8 +116,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
               <Heart size={20} fill={liked ? "currentColor" : "none"} className="group-hover:fill-rose-500" />
               <span className="font-bold">{post.likes || 0} กำลังใจ</span>
             </button>
-            <div className="text-slate-400 text-sm">
-              โดย: {post.authorId}
+            <div className="text-slate-400 text-sm flex items-center gap-2">
+              <span>โดย: {post.authorId}</span>
+              {post.authorRole && post.authorRole !== '' && (
+                <span className="text-xs">({post.authorRole})</span>
+              )}
             </div>
           </div>
         </div>
