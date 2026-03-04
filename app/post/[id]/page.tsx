@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { Heart, MessageCircle, Send, ChevronRight, Shield } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { usePosts, useComments } from '@/hooks';
-import { getAnonymousId, hasLikedPost } from '@/types';
+import { getAnonymousId, hasLikedPost, getUserRole } from '@/types';
 import Link from 'next/link';
 
 function timeAgo(date: any): string {
@@ -25,9 +25,11 @@ function timeAgo(date: any): string {
 
 const Navbar = () => {
   const [anonId, setAnonId] = useState('');
+  const [userRole, setUserRole] = useState('');
   
   useEffect(() => {
     setAnonId(getAnonymousId());
+    getUserRole().then(role => setUserRole(role || ''));
   }, []);
 
   return (
@@ -46,8 +48,13 @@ const Navbar = () => {
           <Link href="/admin" className="text-slate-400 hover:text-slate-600 transition-colors">
             <Shield size={20} />
           </Link>
-          <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
-            {anonId}
+          <div className="flex flex-col items-end">
+            <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
+              {anonId}
+            </div>
+            {userRole && (
+              <span className="text-[10px] text-slate-500 mt-1">{userRole}</span>
+            )}
           </div>
         </div>
       </div>
