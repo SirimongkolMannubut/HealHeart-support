@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Heart, Shield, Trash2, CheckCircle } from 'lucide-react';
+import { Heart, Shield, Trash2, CheckCircle, Bookmark } from 'lucide-react';
 import { usePosts } from '@/hooks';
-import { getAnonymousId } from '@/types';
+import { getAnonymousId, getUserRole } from '@/types';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const [anonId, setAnonId] = useState('');
+  const [userRole, setUserRole] = useState('');
   
   useEffect(() => {
     setAnonId(getAnonymousId());
+    getUserRole().then(role => setUserRole(role || ''));
   }, []);
 
   return (
@@ -21,16 +24,24 @@ const Navbar = () => {
             <Heart fill="currentColor" size={20} />
           </div>
           <div>
-            <h1 className="font-display font-bold text-xl text-slate-800 leading-none">HealHeart</h1>
+            <h1 className="font-bold text-xl text-slate-800">HealHeart</h1>
             <span className="text-[10px] uppercase tracking-widest text-orange-500 font-bold">Anonymous Support</span>
           </div>
         </Link>
         <div className="flex items-center gap-4">
+          <Link href="/bookmarks" className="text-amber-500 hover:text-amber-600 transition-colors">
+            <Bookmark size={20} />
+          </Link>
           <Link href="/admin" className="text-slate-400 hover:text-slate-600 transition-colors">
             <Shield size={20} />
           </Link>
-          <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
-            {anonId}
+          <div className="flex flex-col items-end">
+            <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
+              {anonId}
+            </div>
+            {userRole && (
+              <span className="text-[10px] text-slate-500 mt-1">{userRole}</span>
+            )}
           </div>
         </div>
       </div>
@@ -39,8 +50,30 @@ const Navbar = () => {
 };
 
 export default function AdminPage() {
+  const router = useRouter();
   const { posts, deletePost } = usePosts();
   const [filter, setFilter] = useState<'reported' | 'resolved'>('reported');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    getUserRole().then(role => {
+      if (role !== '🛡️ Admin') {
+        router.push('/');
+      } else {
+        setIsAdmin(true);
+      }
+      setLoading(false);
+    });
+  }, [router]);
+  
+  if (loading || !isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   
   const reportedPosts = posts.filter((p: any) => (p.reportCount ?? 0) > 0 && !p.isResolved)
     .sort((a: any, b: any) => (b.reportCount ?? 0) - (a.reportCount ?? 0));

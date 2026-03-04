@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, use } from 'react';
 import { motion } from 'motion/react';
-import { Heart, MessageCircle, Send, ChevronRight, Shield } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { Heart, MessageCircle, Send, ChevronRight, Shield, Bookmark } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { usePosts, useComments } from '@/hooks';
 import { getAnonymousId, hasLikedPost, getUserRole } from '@/types';
 import Link from 'next/link';
@@ -40,11 +40,14 @@ const Navbar = () => {
             <Heart fill="currentColor" size={20} />
           </div>
           <div>
-            <h1 className="font-display font-bold text-xl text-slate-800 leading-none">HealHeart</h1>
+            <h1 className="font-bold text-xl text-slate-800">HealHeart</h1>
             <span className="text-[10px] uppercase tracking-widest text-orange-500 font-bold">Anonymous Support</span>
           </div>
         </Link>
         <div className="flex items-center gap-4">
+          <Link href="/bookmarks" className="text-amber-500 hover:text-amber-600 transition-colors">
+            <Bookmark size={20} />
+          </Link>
           <Link href="/admin" className="text-slate-400 hover:text-slate-600 transition-colors">
             <Shield size={20} />
           </Link>
@@ -62,8 +65,9 @@ const Navbar = () => {
   );
 };
 
-export default function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function PostDetailPage(props: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(props.params);
+  const { id } = resolvedParams;
   const router = useRouter();
   const { posts, likePost } = usePosts();
   const { comments, addComment } = useComments(id || '');
@@ -88,7 +92,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="min-h-screen font-sans">
       <Navbar />
-      <div className="max-w-3xl mx-auto px-4 pb-12">
+      <div className="max-w-4xl mx-auto px-4 pb-12">
         <button onClick={() => router.back()} className="mb-6 flex items-center gap-2 text-slate-500 hover:text-orange-500 transition-colors">
           <ChevronRight className="rotate-180" size={20} />
           <span>กลับ</span>

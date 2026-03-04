@@ -5,12 +5,15 @@ export const metadata = {
   title: "HealHeart - Anonymous Support Community",
   description: "A safe, anonymous space to share your life problems and receive encouragement from a supportive community.",
   manifest: "/manifest.json",
-  themeColor: "#fb923c",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "HealHeart",
   },
+};
+
+export const viewport = {
+  themeColor: "#fb923c",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

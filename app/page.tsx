@@ -41,8 +41,8 @@ const Navbar = React.memo(() => {
   return (
     <nav className="sticky top-0 z-50 glass-card px-4 py-3 mb-6">
       <div className="max-w-4xl mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-orange-400 rounded-2xl flex items-center justify-center text-white shadow-lg">
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-10 h-10 bg-orange-400 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
             <Heart fill="currentColor" size={20} />
           </div>
           <div>
@@ -51,10 +51,10 @@ const Navbar = React.memo(() => {
           </div>
         </Link>
         <div className="flex items-center gap-4">
-          <Link href="/bookmarks" className="text-amber-500 hover:text-amber-600">
+          <Link href="/bookmarks" className="text-amber-500 hover:text-amber-600 transition-colors">
             <Bookmark size={20} />
           </Link>
-          <Link href="/admin" className="text-slate-400 hover:text-slate-600">
+          <Link href="/admin" className="text-slate-400 hover:text-slate-600 transition-colors">
             <Shield size={20} />
           </Link>
           <div className="flex flex-col items-end">

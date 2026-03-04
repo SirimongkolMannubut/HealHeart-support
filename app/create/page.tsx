@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Heart, Shield, Info, ChevronRight } from 'lucide-react';
+import { Heart, Shield, Info, ChevronRight, Bookmark } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { usePosts } from '@/hooks';
 import { CATEGORIES, containsSelfHarm } from '@/lib/utils';
-import { getAnonymousId } from '@/types';
+import { getAnonymousId, getUserRole } from '@/types';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import Link from 'next/link';
@@ -17,9 +17,11 @@ function cn(...inputs: any[]) {
 
 const Navbar = () => {
   const [anonId, setAnonId] = useState('');
+  const [userRole, setUserRole] = useState('');
   
   useEffect(() => {
     setAnonId(getAnonymousId());
+    getUserRole().then(role => setUserRole(role || ''));
   }, []);
 
   return (
@@ -30,16 +32,24 @@ const Navbar = () => {
             <Heart fill="currentColor" size={20} />
           </div>
           <div>
-            <h1 className="font-display font-bold text-xl text-slate-800 leading-none">HealHeart</h1>
+            <h1 className="font-bold text-xl text-slate-800">HealHeart</h1>
             <span className="text-[10px] uppercase tracking-widest text-orange-500 font-bold">Anonymous Support</span>
           </div>
         </Link>
         <div className="flex items-center gap-4">
+          <Link href="/bookmarks" className="text-amber-500 hover:text-amber-600 transition-colors">
+            <Bookmark size={20} />
+          </Link>
           <Link href="/admin" className="text-slate-400 hover:text-slate-600 transition-colors">
             <Shield size={20} />
           </Link>
-          <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
-            {anonId}
+          <div className="flex flex-col items-end">
+            <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
+              {anonId}
+            </div>
+            {userRole && (
+              <span className="text-[10px] text-slate-500 mt-1">{userRole}</span>
+            )}
           </div>
         </div>
       </div>
