@@ -31,8 +31,11 @@ function timeAgo(date: any): string {
 
 const Navbar = React.memo(() => {
   const [anonId, setAnonId] = useState('');
+  const [userRole, setUserRole] = useState('');
+  
   useEffect(() => {
     setAnonId(getAnonymousId());
+    getUserRole().then(role => setUserRole(role || ''));
   }, []);
 
   return (
@@ -54,8 +57,13 @@ const Navbar = React.memo(() => {
           <Link href="/admin" className="text-slate-400 hover:text-slate-600">
             <Shield size={20} />
           </Link>
-          <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
-            {anonId}
+          <div className="flex flex-col items-end">
+            <div className="px-3 py-1 bg-orange-100 rounded-full text-orange-700 text-xs font-medium">
+              {anonId}
+            </div>
+            {userRole && (
+              <span className="text-[10px] text-slate-500 mt-1">{userRole}</span>
+            )}
           </div>
         </div>
       </div>
@@ -77,9 +85,14 @@ const PostCard = React.memo(({ post, onLike, onReport }: { post: any; onLike: (i
       <Link href={`/post/${post.id}`}>
         <div className="cursor-pointer group">
           <div className="flex justify-between items-start mb-3">
-            <span className="px-3 py-1 bg-white border border-orange-100 rounded-full text-orange-600 text-xs font-medium">
-              {post.category}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 bg-white border border-orange-100 rounded-full text-orange-600 text-xs font-medium">
+                {post.category}
+              </span>
+              {post.authorRole && (
+                <span className="text-xs text-slate-500">{post.authorRole}</span>
+              )}
+            </div>
             <span className="text-slate-400 text-xs">{timeAgo(post.createdAt)}</span>
           </div>
           <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-orange-600 transition-colors">{post.title}</h3>

@@ -114,6 +114,7 @@ export interface Post {
   content?: string;
   category?: string;
   authorId?: string;
+  authorRole?: string;
   createdAt?: Date | { toDate?: () => Date } | string | number;
   likes?: number;
   commentCount?: number;

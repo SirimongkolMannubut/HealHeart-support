@@ -73,6 +73,7 @@ export function usePosts() {
           content: p.content,
           category: p.category,
           authorId: p.author_id,
+          authorRole: p.author_role,
           createdAt: p.created_at,
           likes: p.likes,
           commentCount: p.comment_count,
@@ -99,12 +100,15 @@ export function usePosts() {
     if (!supabase) return;
     const filteredTitle = filterProfanity(title);
     const filteredContent = filterProfanity(content);
+    const { getUserRole } = await import('./types');
+    const role = await getUserRole();
     
     await supabase.from('posts').insert({
       title: filteredTitle,
       content: filteredContent,
       category,
       author_id: getAnonymousId(),
+      author_role: role,
       likes: 0,
       comment_count: 0,
       report_count: 0,
