@@ -89,7 +89,7 @@ const PostCard = React.memo(({ post, onLike, onReport }: { post: any; onLike: (i
               <span className="px-3 py-1 bg-white border border-orange-100 rounded-full text-orange-600 text-xs font-medium">
                 {post.category}
               </span>
-              {post.authorRole && (
+              {post.authorRole && post.authorRole !== '' && (
                 <span className="text-xs text-slate-500">{post.authorRole}</span>
               )}
             </div>
