@@ -127,6 +127,7 @@ export interface Comment {
   postId: string;
   content?: string;
   authorId?: string;
+  authorRole?: string;
   createdAt?: Date | { toDate?: () => Date } | string | number;
 }
 

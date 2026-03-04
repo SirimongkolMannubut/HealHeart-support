@@ -140,7 +140,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                 className="bg-white p-5 rounded-2xl border border-orange-50 shadow-sm"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-orange-600">{comment.authorId}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-orange-600">{comment.authorId}</span>
+                    {comment.authorRole && comment.authorRole !== '' && (
+                      <span className="text-[10px] text-slate-500">{comment.authorRole}</span>
+                    )}
+                  </div>
                   <span className="text-[10px] text-slate-400">{timeAgo(comment.createdAt)}</span>
                 </div>
                 <p className="text-slate-700 text-sm leading-relaxed">{comment.content}</p>

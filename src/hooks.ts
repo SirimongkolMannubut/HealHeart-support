@@ -165,6 +165,7 @@ export function useComments(postId: string) {
           postId: c.post_id,
           content: c.content,
           authorId: c.author_id,
+          authorRole: c.author_role,
           createdAt: c.created_at
         })));
       }
@@ -185,11 +186,14 @@ export function useComments(postId: string) {
   const addComment = async (content: string) => {
     if (!supabase) return;
     const filteredContent = filterProfanity(content);
+    const { getUserRole } = await import('./types');
+    const role = await getUserRole();
     
     await supabase.from('comments').insert({
       post_id: postId,
       content: filteredContent,
-      author_id: getAnonymousId()
+      author_id: getAnonymousId(),
+      author_role: role
     });
 
     const { data } = await supabase.from('posts').select('comment_count').eq('id', postId).single();
